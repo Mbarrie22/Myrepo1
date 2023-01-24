@@ -1,1 +1,48 @@
+---
+- hosts: localhost
+  become: yes
+  become_user: forge_admin
+  gather_facts: true
 
+  tasks:
+
+    - name: GESTURES - get the username
+      command: whoami
+      register: whoami_output
+
+    - name: VSCODE - install dependencies
+      become: yes
+      become_user: forge_admin
+      apt:
+        name:
+        - apt-transport-https
+        - gconf2
+        - libasound2
+        - libgtk2.0-0
+        - libxss1
+        state: present
+
+    - name: VSCODE - download
+      apt:
+        name: https://code.visualstudio.com/assets/icons/download.svg
+        state: present
+
+
+    - name: VSCODE - install package
+      become: yes
+      become_user: root
+      apt:
+        name: dpkg -i code-insiders_1.75.0-1670910172_amd64.deb
+        state: present
+
+    - name: VSCODE - install extensions
+      shell: code --install-extension {{ item }} --force
+      with_items:
+        - redhat.ansible
+        - HashiCorp.terraform
+
+    - name: VSCODE - create configuration directory
+      become: yes
+      file:
+        path: "/home/{{ whoami_output.stdout }}/.config/Code/User"
+        state: directory
