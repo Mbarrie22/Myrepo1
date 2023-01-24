@@ -1,1 +1,12 @@
+---
+ - hosts: localhost
+   become: yes
+   become_user: forge_admin
+   gather_facts: true
 
+   tasks: 
+
+   - name: install- vi editor
+     apt:
+        name: vim 
+        state: present
