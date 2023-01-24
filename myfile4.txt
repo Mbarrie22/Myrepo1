@@ -1,1 +1,8 @@
+---
+- hosts: localhost
+  become: yes
+  become_user: forge_admin
+  gather_facts: true
 
+  tasks:
+  - debug: msg="Welcome to Dark wolf Solutions @Forge Navy"
